@@ -12,31 +12,7 @@ public class ListaContactos {
 	 * En la lista de coordenadas metemos el documento de la persona que está en esa coordenada 
 	 * en un instante 
 	 */
-	public void noHaceCosas(NodoTemporal aux, PosicionPersona p){
-    NodoPosicion npActual = aux.getListaCoordenadas();
-	NodoPosicion npAnt=null;		
-	boolean npEncontrado = false;
-	while (npActual!=null && !npEncontrado) {
-		if(npActual.getCoordenada().equals(p.getCoordenada())) {
-			npEncontrado=true;
-			npActual.setNumPersonas(npActual.getNumPersonas()+1);
-		}else {
-			npAnt = npActual;
-			npActual = npActual.getSiguiente();
-		}
-	}
-	if(!npEncontrado) {
-		NodoPosicion npNuevo = new NodoPosicion(p.getCoordenada(),1, null);
-		if(aux.getListaCoordenadas()==null)
-			aux.setListaCoordenadas(npNuevo);
-		else
-			npAnt.setSiguiente(npNuevo);			
-	}
-}
-private void noHaceCosas2(PosicionPersona p, NodoTemporal aux, NodoTemporal ant){
-
-}
-public void insertarNodoTemporal (PosicionPersona p) {
+	public void insertarNodoTemporal (PosicionPersona p) {
 		NodoTemporal aux = lista, ant=null;
 		boolean salir=false,  encontrado = false;
 		/**
@@ -50,7 +26,25 @@ public void insertarNodoTemporal (PosicionPersona p) {
 				/**
 				 * Insertamos en la lista de coordenadas
 				 */
-				noHaceCosas(aux);
+				NodoPosicion npActual = aux.getListaCoordenadas();
+				NodoPosicion npAnt=null;		
+				boolean npEncontrado = false;
+				while (npActual!=null && !npEncontrado) {
+					if(npActual.getCoordenada().equals(p.getCoordenada())) {
+						npEncontrado=true;
+						npActual.setNumPersonas(npActual.getNumPersonas()+1);
+					}else {
+						npAnt = npActual;
+						npActual = npActual.getSiguiente();
+					}
+				}
+				if(!npEncontrado) {
+					NodoPosicion npNuevo = new NodoPosicion(p.getCoordenada(),1, null);
+					if(aux.getListaCoordenadas()==null)
+						aux.setListaCoordenadas(npNuevo);
+					else
+						npAnt.setSiguiente(npNuevo);			
+				}
 			}else if(aux.getFecha().compareTo(p.getFechaPosicion())<0) {
 				ant = aux;
 				aux=aux.getSiguiente();
