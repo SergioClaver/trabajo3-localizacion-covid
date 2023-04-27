@@ -91,15 +91,42 @@ public class ContactosCovid {
 
 	public void loadDataFile(String fichero, boolean reset) {
 		File archivo = null;
-		FileReader fr = null;
-		BufferedReader br = null;
-		String datas[] = null, data = null;
-		loadDataFile(fichero, reset, archivo, fr, br, datas, data);
+		
+		loadDataFile(fichero, reset, archivo);
 		
 	}
 
+	private void resetData(){
+		this.poblacion = new Poblacion();
+		this.localizacion = new Localizacion();
+		this.listaContactos = new ListaContactos();
+	}
+
+	private void haceCosas(String[] datos) throws Exception{
+		if (!datos[0].equals("PERSONA") && !datos[0].equals("LOCALIZACION")) {
+			throw new EmsInvalidTypeException();
+		}
+		if (datos[0].equals("PERSONA")) {
+			if (datos.length != Constantes.MAX_DATOS_PERSONA) {
+				throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
+			}
+			this.poblacion.addPersona(this.crearPersona(datos));
+		}
+		if (datos[0].equals("LOCALIZACION")) {
+			if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
+				throw new EmsInvalidNumberOfDataException(
+						"El número de datos para LOCALIZACION es menor de 6" );
+			}
+			PosicionPersona pp = this.crearPosicionPersona(datos);
+			this.localizacion.addLocalizacion(pp);
+			this.listaContactos.insertarNodoTemporal(pp);
+		}
+	}
 	@SuppressWarnings("resource")
-	public void loadDataFile(String fichero, boolean reset, File archivo, FileReader fr, BufferedReader br, String datas[], String data ) {
+	public void loadDataFile(String fichero, boolean reset, File archivo) {
+		FileReader fr = null;
+		BufferedReader br = null;
+		String datas[] = null, data = null;
 		try {
 			// Apertura del fichero y creacion de BufferedReader para poder
 			// hacer una lectura comoda (disponer del metodo readLine()).
@@ -107,9 +134,7 @@ public class ContactosCovid {
 			fr = new FileReader(archivo);
 			br = new BufferedReader(fr);
 			if (reset) {
-				this.poblacion = new Poblacion();
-				this.localizacion = new Localizacion();
-				this.listaContactos = new ListaContactos();
+				resetData();
 			} 
 			/**
 			 * Lectura del fichero	línea a línea. Compruebo que cada línea 
@@ -120,24 +145,7 @@ public class ContactosCovid {
 				datas = dividirEntrada(data.trim());
 				for (String linea : datas) {
 					String datos[] = this.dividirLineaData(linea);
-					if (!datos[0].equals("PERSONA") && !datos[0].equals("LOCALIZACION")) {
-						throw new EmsInvalidTypeException();
-					}
-					if (datos[0].equals("PERSONA")) {
-						if (datos.length != Constantes.MAX_DATOS_PERSONA) {
-							throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es menor de 8");
-						}
-						this.poblacion.addPersona(this.crearPersona(datos));
-					}
-					if (datos[0].equals("LOCALIZACION")) {
-						if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
-							throw new EmsInvalidNumberOfDataException(
-									"El número de datos para LOCALIZACION es menor de 6" );
-						}
-						PosicionPersona pp = this.crearPosicionPersona(datos);
-						this.localizacion.addLocalizacion(pp);
-						this.listaContactos.insertarNodoTemporal(pp);
-					}
+					haceCosas(datos);
 				}
 
 			}
