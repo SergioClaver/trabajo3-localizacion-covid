@@ -13,7 +13,7 @@ public class ListaContactos {
 	 * en un instante 
 	 */
 	public void noHaceCosas(NodoTemporal aux){
-    NodoPosicion npActual = aux.getListaCoordenadas();
+    	NodoPosicion npActual = aux.getListaCoordenadas();
 	NodoPosicion npAnt=null;		
 	boolean npEncontrado = false;
 	while (npActual!=null && !npEncontrado) {
@@ -33,9 +33,7 @@ public class ListaContactos {
 			npAnt.setSiguiente(npNuevo);			
 	}
 }
-private void noHaceCosas2(PosicionPersona p, NodoTemporal aux, NodoTemporal ant){
 
-}
 public void insertarNodoTemporal (PosicionPersona p) {
 		NodoTemporal aux = lista, ant=null;
 		boolean salir=false,  encontrado = false;
